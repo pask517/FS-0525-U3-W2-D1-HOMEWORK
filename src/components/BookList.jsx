@@ -1,10 +1,24 @@
-import { Component } from 'react'
-import SingleBook from './SingleBook'
-import { Col, Form, Row } from 'react-bootstrap'
+import { Component } from "react"
+import SingleBook from "./SingleBook"
+import { Col, Form, Row } from "react-bootstrap"
+import CommentArea from "./CommentArea"
 
 class BookList extends Component {
   state = {
-    searchQuery: '',
+    searchQuery: "",
+    selected: false,
+    asin: "",
+  }
+
+  changeState = (newSelected) => {
+    this.setState({
+      selected: newSelected,
+    })
+  }
+  changeAsin = (newAsin) => {
+    this.setState({
+      asin: newAsin,
+    })
   }
 
   render() {
@@ -23,15 +37,27 @@ class BookList extends Component {
           </Col>
         </Row>
         <Row className="g-2 mt-3">
-          {this.props.books
-            .filter((b) =>
-              b.title.toLowerCase().includes(this.state.searchQuery)
-            )
-            .map((b) => (
-              <Col xs={12} md={4} key={b.asin}>
-                <SingleBook book={b} />
-              </Col>
-            ))}
+          <Col className="col-9">
+            {this.props.books
+              .filter((b) =>
+                b.title.toLowerCase().includes(this.state.searchQuery)
+              )
+              .map((b) => (
+                <Col xs={12} md={6} key={b.asin}>
+                  <SingleBook
+                    book={b}
+                    changeState={this.changeState}
+                    selected={this.state.selected}
+                    asin={b.asin}
+                    changeAsin={this.changeAsin}
+                  />
+                </Col>
+              ))}
+          </Col>
+          <Col className="col-3 text-start">
+            <h1>Comment Area</h1>
+            <CommentArea />
+          </Col>
         </Row>
       </>
     )
